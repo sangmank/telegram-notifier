@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "telegram_notifier"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 python-telegram-bot = "^20.7"
 click = "^8.1.7"
 
