@@ -2,7 +2,7 @@
 
 import pytest
 from unittest.mock import AsyncMock, Mock, patch
-from telegram.error import TelegramError, NetworkError, Unauthorized
+from telegram.error import TelegramError, NetworkError
 
 from telegram_notifier.notifier import TelegramNotifier, send_notification
 
@@ -11,34 +11,31 @@ class TestErrorHandling:
     """Test error handling scenarios."""
     
     @pytest.mark.asyncio
-    async def test_unauthorized_error(self) -> None:
+    @patch('telegram.Bot.send_message', new_callable=AsyncMock)
+    async def test_unauthorized_error(self, mock_send_message: AsyncMock) -> None:
         """Test handling of unauthorized bot token."""
         notifier = TelegramNotifier("invalid_token")
-        notifier.bot.send_message = AsyncMock(
-            side_effect=Unauthorized("Unauthorized")
-        )
+        mock_send_message.side_effect = TelegramError("Unauthorized")
         
         with pytest.raises(TelegramError, match="Failed to send message: Unauthorized"):
             await notifier.send_message("123456789", "Test message")
     
     @pytest.mark.asyncio
-    async def test_network_error(self) -> None:
+    @patch('telegram.Bot.send_message', new_callable=AsyncMock)
+    async def test_network_error(self, mock_send_message: AsyncMock) -> None:
         """Test handling of network errors."""
         notifier = TelegramNotifier("test_token")
-        notifier.bot.send_message = AsyncMock(
-            side_effect=NetworkError("Connection timeout")
-        )
+        mock_send_message.side_effect = NetworkError("Connection timeout")
         
         with pytest.raises(TelegramError, match="Failed to send message: Connection timeout"):
             await notifier.send_message("123456789", "Test message")
     
     @pytest.mark.asyncio
-    async def test_invalid_chat_id(self) -> None:
+    @patch('telegram.Bot.send_message', new_callable=AsyncMock)
+    async def test_invalid_chat_id(self, mock_send_message: AsyncMock) -> None:
         """Test handling of invalid chat ID."""
         notifier = TelegramNotifier("test_token")
-        notifier.bot.send_message = AsyncMock(
-            side_effect=TelegramError("Chat not found")
-        )
+        mock_send_message.side_effect = TelegramError("Chat not found")
         
         with pytest.raises(TelegramError, match="Failed to send message: Chat not found"):
             await notifier.send_message("invalid_chat_id", "Test message")

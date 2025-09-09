@@ -14,18 +14,38 @@ pip install .
 
 ## Usage
 
-### Basic usage with command-line arguments:
+### Send text messages:
 
 ```bash
+# With command-line arguments
 telegram-notifier send --token "YOUR_BOT_TOKEN" --chat-id "YOUR_CHAT_ID" --message "Hello, world!"
-```
 
-### Using environment variables (recommended for scripts):
-
-```bash
+# Using environment variables (recommended for scripts)
 export TELEGRAM_BOT_TOKEN="your_bot_token_here"
 export TELEGRAM_CHAT_ID="your_chat_id_here"
 telegram-notifier send --message "Hello from script!"
+```
+
+### Send files:
+
+```bash
+# Send any file (up to 50MB)
+telegram-notifier send-file-cmd --file "/path/to/document.pdf" --caption "Monthly report"
+
+# Send with environment variables
+export TELEGRAM_BOT_TOKEN="your_token"
+export TELEGRAM_CHAT_ID="your_chat_id"
+telegram-notifier send-file-cmd --file "report.xlsx" --caption "Q3 Sales Data"
+```
+
+### Send photos:
+
+```bash
+# Send image files (up to 10MB)
+telegram-notifier send-photo-cmd --file "/path/to/image.jpg" --caption "Screenshot"
+
+# Send without caption
+telegram-notifier send-photo-cmd --file "graph.png"
 ```
 
 ## Setup

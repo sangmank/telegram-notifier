@@ -47,8 +47,12 @@ poetry run flake8 telegram_notifier
 
 - **Credentials**: Tool requires `bot_token` (from BotFather) and `chat_id` (target chat identifier)
 - **Environment variables**: Support `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to avoid CLI exposure
-- **CLI interface**: Primary command should be `send --token <token> --chat-id <id> --message <message>`
-- **Error handling**: Graceful handling of network issues and API errors
+- **CLI interface**: 
+  - `send --token <token> --chat-id <id> --message <message>` for text messages
+  - `send-file-cmd --file <path> --caption <text>` for file uploads (up to 50MB)
+  - `send-photo-cmd --file <path> --caption <text>` for image uploads (up to 10MB)
+- **File handling**: Proper file validation and error handling for non-existent files
+- **Error handling**: Graceful handling of network issues, API errors, and file errors
 - **Type hints**: All functions should include proper type annotations
 - **Separation of concerns**: Keep CLI parsing separate from Telegram API logic
 
