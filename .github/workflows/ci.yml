@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install --only dev
+
+      - name: Black format check
+        run: poetry run black --check .
+
+      - name: Flake8 lint
+        run: poetry run flake8 telegram_notifier
+
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: [self-hosted]
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run pytest --cov=telegram_notifier --cov-report=term
+
+  typecheck:
+    name: Type check
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run mypy
+        run: poetry run mypy telegram_notifier
+
+  deploy:
+    name: Deploy
+    runs-on: [self-hosted]
+    needs: [lint, test, typecheck]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pip
+        run: sudo apt-get update && sudo apt-get install -y python3-pip
+
+      - name: Install package with system Python
+        run: python3 -m pip install --user --break-system-packages .

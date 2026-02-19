@@ -39,16 +39,22 @@ def send(token: Optional[str], chat_id: Optional[str], message: str) -> None:
     # Get credentials from environment if not provided
     bot_token = token or os.getenv("TELEGRAM_BOT_TOKEN")
     target_chat_id = chat_id or os.getenv("TELEGRAM_CHAT_ID")
-    
+
     # Validate required parameters
     if not bot_token:
-        click.echo("Error: Bot token is required. Use --token or set TELEGRAM_BOT_TOKEN", err=True)
+        click.echo(
+            "Error: Bot token is required. Use --token or set TELEGRAM_BOT_TOKEN",
+            err=True,
+        )
         sys.exit(1)
-    
+
     if not target_chat_id:
-        click.echo("Error: Chat ID is required. Use --chat-id or set TELEGRAM_CHAT_ID", err=True)
+        click.echo(
+            "Error: Chat ID is required. Use --chat-id or set TELEGRAM_CHAT_ID",
+            err=True,
+        )
         sys.exit(1)
-    
+
     try:
         success = send_notification(bot_token, target_chat_id, message)
         if success:
@@ -86,21 +92,29 @@ def send(token: Optional[str], chat_id: Optional[str], message: str) -> None:
     help="Optional caption for the file",
     type=str,
 )
-def send_file_cmd(token: Optional[str], chat_id: Optional[str], file: str, caption: Optional[str]) -> None:
+def send_file_cmd(
+    token: Optional[str], chat_id: Optional[str], file: str, caption: Optional[str]
+) -> None:
     """Send a file to a Telegram chat."""
     # Get credentials from environment if not provided
     bot_token = token or os.getenv("TELEGRAM_BOT_TOKEN")
     target_chat_id = chat_id or os.getenv("TELEGRAM_CHAT_ID")
-    
+
     # Validate required parameters
     if not bot_token:
-        click.echo("Error: Bot token is required. Use --token or set TELEGRAM_BOT_TOKEN", err=True)
+        click.echo(
+            "Error: Bot token is required. Use --token or set TELEGRAM_BOT_TOKEN",
+            err=True,
+        )
         sys.exit(1)
-    
+
     if not target_chat_id:
-        click.echo("Error: Chat ID is required. Use --chat-id or set TELEGRAM_CHAT_ID", err=True)
+        click.echo(
+            "Error: Chat ID is required. Use --chat-id or set TELEGRAM_CHAT_ID",
+            err=True,
+        )
         sys.exit(1)
-    
+
     try:
         success = send_file(bot_token, target_chat_id, file, caption)
         if success:
@@ -141,21 +155,29 @@ def send_file_cmd(token: Optional[str], chat_id: Optional[str], file: str, capti
     help="Optional caption for the photo",
     type=str,
 )
-def send_photo_cmd(token: Optional[str], chat_id: Optional[str], file: str, caption: Optional[str]) -> None:
+def send_photo_cmd(
+    token: Optional[str], chat_id: Optional[str], file: str, caption: Optional[str]
+) -> None:
     """Send a photo to a Telegram chat."""
     # Get credentials from environment if not provided
     bot_token = token or os.getenv("TELEGRAM_BOT_TOKEN")
     target_chat_id = chat_id or os.getenv("TELEGRAM_CHAT_ID")
-    
+
     # Validate required parameters
     if not bot_token:
-        click.echo("Error: Bot token is required. Use --token or set TELEGRAM_BOT_TOKEN", err=True)
+        click.echo(
+            "Error: Bot token is required. Use --token or set TELEGRAM_BOT_TOKEN",
+            err=True,
+        )
         sys.exit(1)
-    
+
     if not target_chat_id:
-        click.echo("Error: Chat ID is required. Use --chat-id or set TELEGRAM_CHAT_ID", err=True)
+        click.echo(
+            "Error: Chat ID is required. Use --chat-id or set TELEGRAM_CHAT_ID",
+            err=True,
+        )
         sys.exit(1)
-    
+
     try:
         success = send_photo(bot_token, target_chat_id, file, caption)
         if success:
